@@ -1,6 +1,7 @@
 package com.example.room;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,37 +14,27 @@ import com.example.room.RoomDataBase.MyData;
 
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private List<MyData> myData;
-    private Activity activity;
+    private Context mContext;
     private OnItemClickListener onItemClickListener;
-    public MyAdapter(Activity activity, List<MyData> myData){
-        this.activity = activity;
+    public MyAdapter(Context mContext,List<MyData> myData){
         this.myData = myData;
+        this.mContext = mContext;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.onItemClickListener = onItemClickListener;
     }
     //------------更薪資料-----------------//
-    public void refreshView(){
-        new Thread(() -> {
-            List<MyData> data = DataBase.getInstance(activity).getDataUao().displayAll();
-            this.myData = data;
-            activity.runOnUiThread(()->{
-                notifyDataSetChanged();
-            });
-        }).start();
-    }
-    //------------刪除資料-----------------//
-    public void  deleteData(int position){
-        new Thread(() -> {
-            DataBase.getInstance(activity).getDataUao().deleteData(myData.get(position).getId());
-            activity.runOnUiThread(()->{
-                notifyItemRemoved(position);
-                refreshView();
-            });
-        }).start();
+    public void refreshView(List<MyData> myData){
+        this.myData = myData;
+        notifyDataSetChanged();
     }
     @NonNull
     @Override
@@ -65,17 +56,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         void onItemClick(MyData myData);
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tx1;
+        TextView name;
         View view;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tx1 = itemView.findViewById(R.id.data);
+            name = itemView.findViewById(R.id.data);
             view = itemView;
         }
         void binding(int position){
-            tx1.setText(myData.get(position).getName());
+            name.setText(myData.get(position).getName());
             view.setOnClickListener(v -> {
-                onItemClickListener.onItemClick(myData.get(position));
+                onItemClickListener.onItemClick(myData.get(position));   //按下view，將按下的項目傳給interface OnItemClickListener中的onItemClick
             });
         }
     }

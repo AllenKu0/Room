@@ -10,27 +10,30 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+
 @Dao
 public interface DataUao {
     String tableName = "MyTable";
 
     //--------------新增資料--------------------//
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertData(MyData myData);
+    Completable insertData(MyData myData);
     /*
     @Query("INSERT INTO "+tableName+"(name,phone,hobby,elseInfo) VALUES (:name,:phone,:hobby,:elseData)")
     void insertData(String name,String phone,String hobby ,String elseData);
     */
     //--------------撈取資料--------------------//
     @Query("SELECT * FROM " + tableName)
-    List<MyData> displayAll();
+    Observable<List<MyData>> displayAll();
     /*
     @Query("SELECT * FROM "+ tableName +" WHERE name = :name")
     List<MyData> findDataByName(String name);
      */
     //--------------更新資料--------------------//
     @Update
-    void updataData(MyData myData);
+    Completable updataData(MyData myData);
     /*
     @Query("UPDATE "+tableName+" SET name=:name,phone=:phone,hobby=:hobby,elseInfo=elseInfo WHERE id =:id" )
     void updateData(int id,String name,String phone,String hobby ,String elseData);
@@ -41,5 +44,5 @@ public interface DataUao {
     void deleteData(MyData myData);
      */
     @Query("DELETE FROM "+tableName+" WHERE id = :id")
-    void deleteData(int id);
+    Completable deleteData(int id);
 }

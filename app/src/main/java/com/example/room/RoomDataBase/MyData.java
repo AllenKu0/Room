@@ -21,7 +21,7 @@ public class MyData {
         this.elseInfo = elseInfo;
     }
     @Ignore
-    public MyData(int id ,String name,String phone,String hobby,String elseInfo ){
+    public MyData(int id ,String name,String phone,String hobby,String elseInfo){
         this.id = id;
         this.name = name;
         this.phone = phone;
